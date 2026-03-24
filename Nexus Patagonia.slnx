@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../NexusPatagonia.Domain/NexusPatagonia.Domain.csproj" />
-  <Project Path="../NexusPatagonia.Infrastructure/NexusPatagonia.Infrastructure.csproj" />
-  <Project Path="Nexus Patagonia.WebApi.csproj" />
+  <Project Path="NexusPatagonia.Domain/NexusPatagonia.Domain.csproj" />
+  <Project Path="NexusPatagonia.Infrastructure/NexusPatagonia.Infrastructure.csproj" />
+  <Project Path="NexusPatagonia.WebApi/NexusPatagonia.WebApi.csproj" />
 </Solution>
