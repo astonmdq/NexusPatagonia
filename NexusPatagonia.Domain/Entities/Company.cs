@@ -6,6 +6,11 @@ namespace NexusPatagonia.Domain.Entities
     {
         public string Name { get; set; }
         public string Cuit { get; set; }
-        public virtual List<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
+
+        public virtual List<Employee> Employees { get; set; }
+
+        public virtual List<MonthlyConcept> MonthlyConcepts { get; set; }
+
     }
 }

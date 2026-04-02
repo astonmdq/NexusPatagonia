@@ -1,44 +1,58 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NexusPatagonia.Domain.DTOs;
+using NexusPatagonia.Domain.Interfaces;
+using NexusPatagonia.Infrastructure.Services.Persistence;
 
 namespace NexusPatagonia.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")] // Solo administradores
+    //[Authorize(Roles = "Admin")] // Solo administradores
     public class DocumentUploadController : ControllerBase
     {
-        private readonly ServiceTypeA _serviceA;
-        private readonly ServiceTypeB _serviceB;
-        // ... otros servicios
+        private readonly IEnumerable<IPdfProcessingStrategy> _strategies;
+        private readonly IPersistenceCoordinator _persistenceCoordinator;
 
-        public DocumentUploadController(ServiceTypeA serviceA, ServiceTypeB serviceB)
+        public DocumentUploadController(IEnumerable<IPdfProcessingStrategy> strategies, IPersistenceCoordinator persistenceCoordinator)
         {
-            _serviceA = serviceA;
-            _serviceB = serviceB;
+            _strategies = strategies;
+            _persistenceCoordinator = persistenceCoordinator;
         }
 
         [HttpPost("upload-pdf")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadPdf(IFormFile file, [FromQuery] string docType)
         {
             if (file == null || file.Length == 0) return BadRequest("Archivo no válido.");
+            var strategy = _strategies.FirstOrDefault(s =>
+            s.DocumentType.Equals(docType, StringComparison.OrdinalIgnoreCase));
 
-            using var stream = file.OpenReadStream();
+            if (strategy == null)
+                return BadRequest($"No se encontró una estrategia para el tipo de documento: {docType}");
 
-            switch (docType.ToLower())
-            {
-                case "maxirest":
-                    await _serviceA.ProcessAsync(stream);
-                    break;
-                case "cucina":
-                    await _serviceB.ProcessAsync(stream);
-                    break;
-                // ... otros casos
-                default:
-                    return BadRequest("Tipo de documento desconocido.");
+            try
+            { 
+                using var stream = file.OpenReadStream();
+
+                IExtractedData extractedData = await strategy.ProcessAsync(stream);
+
+                await _persistenceCoordinator.SaveAsync(extractedData);
+
+
+                return Ok(new {
+                    message = "Procesado exitosamente",
+                    FileName = file.FileName,
+                    Type = docType
+                });
             }
-
-            return Ok("Archivo procesado y guardado en la base de datos.");
+            catch (Exception ex)
+            {
+                // Aquí capturarás los errores de validación de CUIT que programamos
+                return BadRequest(new { Error = ex.Message });
+            }
         }
+
+        
     }
 }

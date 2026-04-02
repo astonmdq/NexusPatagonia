@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NexusPatagonia.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using NexusPatagonia.Infrastructure.Data;
 namespace NexusPatagonia.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260330213207_ConceptEntity2")]
+    partial class ConceptEntity2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,9 +277,8 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -285,13 +287,18 @@ namespace NexusPatagonia.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("ProfitReport")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<decimal>("Net")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NotTaxed")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("Concepts");
                 });
@@ -335,45 +342,6 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.MonthlyConcept", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("ConceptId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal>("Net")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("NonTaxable")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("Period")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("ConceptId");
-
-                    b.ToTable("MontlysConcepts");
                 });
 
             modelBuilder.Entity("NexusPatagonia.Domain.Entities.Receipt", b =>
@@ -548,66 +516,6 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.Uthgra", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("Period")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UthgraConceptId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("UthgraConceptId");
-
-                    b.ToTable("Uthgras");
-                });
-
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.UthgraConcept", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UthgraConcepts");
-                });
-
             modelBuilder.Entity("CompanyUser", b =>
                 {
                     b.HasOne("NexusPatagonia.Domain.Entities.Company", null)
@@ -693,6 +601,17 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("NexusPatagonia.Domain.Entities.Concept", b =>
+                {
+                    b.HasOne("NexusPatagonia.Domain.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("NexusPatagonia.Domain.Entities.Employee", b =>
                 {
                     b.HasOne("NexusPatagonia.Domain.Entities.Company", "Company")
@@ -704,25 +623,6 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.MonthlyConcept", b =>
-                {
-                    b.HasOne("NexusPatagonia.Domain.Entities.Company", "Company")
-                        .WithMany("MonthlyConcepts")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NexusPatagonia.Domain.Entities.Concept", "Concept")
-                        .WithMany("MonthlyConcepts")
-                        .HasForeignKey("ConceptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Concept");
-                });
-
             modelBuilder.Entity("NexusPatagonia.Domain.Entities.Receipt", b =>
                 {
                     b.HasOne("NexusPatagonia.Domain.Entities.Company", "Company")
@@ -732,7 +632,7 @@ namespace NexusPatagonia.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("NexusPatagonia.Domain.Entities.Employee", "Employee")
-                        .WithMany("Receipts")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -742,40 +642,9 @@ namespace NexusPatagonia.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.Uthgra", b =>
-                {
-                    b.HasOne("NexusPatagonia.Domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NexusPatagonia.Domain.Entities.UthgraConcept", "UthgraConcept")
-                        .WithMany()
-                        .HasForeignKey("UthgraConceptId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("UthgraConcept");
-                });
-
             modelBuilder.Entity("NexusPatagonia.Domain.Entities.Company", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("MonthlyConcepts");
-                });
-
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.Concept", b =>
-                {
-                    b.Navigation("MonthlyConcepts");
-                });
-
-            modelBuilder.Entity("NexusPatagonia.Domain.Entities.Employee", b =>
-                {
-                    b.Navigation("Receipts");
                 });
 
             modelBuilder.Entity("NexusPatagonia.Domain.Entities.Supplier", b =>

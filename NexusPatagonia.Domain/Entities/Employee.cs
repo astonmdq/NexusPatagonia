@@ -1,4 +1,5 @@
 ﻿using NexusPatagonia.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NexusPatagonia.Domain.Entities
 {
@@ -8,7 +9,11 @@ namespace NexusPatagonia.Domain.Entities
         public string Cuit { get; set; }
         public string Document { get; set; }
         public string File { get; set; }
+        public Guid CompanyId { get; set; }
+        [ForeignKey("CompanyId")]
 
-        public virtual List<Company> Companies { get; set; }
+        public virtual Company Company { get; set; }
+
+        public virtual List<Receipt> Receipts { get; set; }
     }
 }
