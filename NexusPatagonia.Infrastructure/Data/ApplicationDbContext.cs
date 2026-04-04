@@ -22,6 +22,9 @@ namespace NexusPatagonia.Infrastructure.Data
         public DbSet<Uthgra> Uthgras { get; set; }
         public DbSet<UthgraConcept> UthgraConcepts { get; set; }
 
+        public DbSet<DDJJ> DDJJs { get; set; }
+        public DbSet<DDJJConcept> DDJJConcepts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

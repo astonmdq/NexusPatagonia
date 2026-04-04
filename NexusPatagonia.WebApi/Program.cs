@@ -63,6 +63,7 @@ builder.Services.AddScoped<IPdfProcessingStrategy, ReceiptsPdfStrategy>();
 builder.Services.AddScoped<IPersistenceStrategy, ReceiptPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceStrategy, ConceptPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceStrategy, UthgraPersistenceStrategy>();
+builder.Services.AddScoped<IPersistenceStrategy, DDJJPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceCoordinator, PersistenceCoordinator>();
 var app = builder.Build();
 

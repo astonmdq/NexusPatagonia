@@ -12,5 +12,8 @@ namespace NexusPatagonia.Domain.Entities
 
         public virtual List<MonthlyConcept> MonthlyConcepts { get; set; }
 
+        public virtual List<Uthgra> Uthgras { get; set; }
+        public virtual List<DDJJ> DDJJs { get; set; }
+
     }
 }
