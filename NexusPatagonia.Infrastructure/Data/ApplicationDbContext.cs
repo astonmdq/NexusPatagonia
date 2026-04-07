@@ -25,6 +25,10 @@ namespace NexusPatagonia.Infrastructure.Data
         public DbSet<DDJJ> DDJJs { get; set; }
         public DbSet<DDJJConcept> DDJJConcepts { get; set; }
 
+        public DbSet<CashMovement> CashMovements { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Subcategory> Subcategories { get; set; }   
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

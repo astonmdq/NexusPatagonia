@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NexusPatagonia.Domain.DTOs;
 using NexusPatagonia.Domain.Interfaces;
-using NexusPatagonia.Infrastructure.Services.Persistence;
 
 namespace NexusPatagonia.Controllers
 {

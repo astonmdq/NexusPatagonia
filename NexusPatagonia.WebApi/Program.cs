@@ -8,6 +8,10 @@ using NexusPatagonia.Infrastructure.Data;
 using NexusPatagonia.Infrastructure.Services.Pdf;
 using NexusPatagonia.Infrastructure.Services.Persistence;
 using NexusPatagonia.Infrastructure.Services.Strategies;
+using NexusPatagonia.Mappings;
+using AutoMapper;
+using NexusPatagonia.Application.Interfaces;
+using NexusPatagonia.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +49,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile).Assembly);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -65,6 +70,8 @@ builder.Services.AddScoped<IPersistenceStrategy, ConceptPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceStrategy, UthgraPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceStrategy, DDJJPersistenceStrategy>();
 builder.Services.AddScoped<IPersistenceCoordinator, PersistenceCoordinator>();
+builder.Services.AddScoped<ICashMovementRepository, CashMovementRepository>();
+builder.Services.AddScoped<ICashMovementService, CashMovementService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

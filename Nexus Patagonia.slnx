@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="NexusPatagonia.Application/NexusPatagonia.Application.csproj" Id="fb8049db-cd86-4ab7-af42-67ffdc4aa6d4" />
   <Project Path="NexusPatagonia.Domain/NexusPatagonia.Domain.csproj" />
   <Project Path="NexusPatagonia.Infrastructure/NexusPatagonia.Infrastructure.csproj" />
   <Project Path="NexusPatagonia.WebApi/NexusPatagonia.WebApi.csproj" />

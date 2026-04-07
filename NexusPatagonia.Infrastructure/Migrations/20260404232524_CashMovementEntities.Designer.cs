@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NexusPatagonia.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using NexusPatagonia.Infrastructure.Data;
 namespace NexusPatagonia.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404232524_CashMovementEntities")]
+    partial class CashMovementEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,19 +265,16 @@ namespace NexusPatagonia.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("Expense")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("Invoiced")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<Guid>("SubcategordyId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("SubcategoryId")
+                    b.Property<Guid>("SubcategoryId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -874,7 +874,9 @@ namespace NexusPatagonia.Infrastructure.Migrations
 
                     b.HasOne("NexusPatagonia.Domain.Entities.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("NexusPatagonia.Domain.Entities.Subcategory", "Subcategory")
                         .WithMany("CashMovements")
