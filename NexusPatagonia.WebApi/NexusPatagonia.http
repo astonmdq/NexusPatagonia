@@ -1,0 +1,6 @@
+@Nexus_Patagonia_HostAddress = http://localhost:5075
+
+GET {{Nexus_Patagonia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
